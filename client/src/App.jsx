@@ -17,6 +17,7 @@ import Footer from "./components/Footer";
 import BlobsBG from "./components/BlobsBG";
 import FloatingParticles from "./components/FloatingParticles";
 import Preloader from "./components/Preloader";
+import techStacks from "./data/techStacks";
 // Optional smooth scrolling (Apple-like feel)
 // import Lenis from "lenis";
 
@@ -139,6 +140,41 @@ export default function App() {
           pin: true,
           anticipatePin: 1,
           scrub: true,
+        });
+      }
+
+
+
+      // === ABOUT SECTION ===
+      if (aboutRef.current) {
+        const totalStages = techStacks.length + 1; // 1 for About Me intro
+        const totalScroll = totalStages * window.innerHeight;
+
+        const aboutTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: aboutRef.current,
+            start: "top top",
+            end: `+=${totalScroll}`,
+            pin: true,
+            scrub: true,
+          }
+        });
+
+        // Step 1: About Me intro
+        aboutTl.fromTo(
+          aboutRef.current.querySelector("[data-about-intro]"),
+          { opacity: 0, y: 40 },
+          { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }
+        );
+
+        // Step 2..N: Each tech stack reveal
+        techStacks.forEach((stack, i) => {
+          aboutTl.fromTo(
+            aboutRef.current.querySelector(`[data-stack='${i}']`),
+            { opacity: 0, y: 60 },
+            { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
+            "+=0.5" // delay between stacks
+          );
         });
       }
 

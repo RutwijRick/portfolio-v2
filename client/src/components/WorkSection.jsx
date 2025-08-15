@@ -9,31 +9,32 @@ const WorkSection = () => {
     return (
         <>
             {popupVisible && hoveredProject && (
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.3 }}
-                    className="absolute top-8 left-0 w-[400px] p-4 rounded-2xl shadow-xl backdrop-blur-md bg-white/20 dark:bg-black/30 border border-white/10"
-                >
-                    <h3 className="text-lg font-semibold mb-2">{hoveredProject.title}</h3>
-                    <p className="text-sm mb-4">{hoveredProject.summary}</p>
+                <></>
+                // <motion.div
+                //     initial={{ opacity: 0, scale: 0.95 }}
+                //     animate={{ opacity: 1, scale: 1 }}
+                //     exit={{ opacity: 0, scale: 0.95 }}
+                //     transition={{ duration: 0.3 }}
+                //     className="absolute top-8 left-0 w-[400px] p-4 rounded-2xl shadow-xl backdrop-blur-md bg-white/20 dark:bg-black/30 border border-white/10"
+                // >
+                //     <h3 className="text-lg font-semibold mb-2">{hoveredProject.title}</h3>
+                //     <p className="text-sm mb-4">{hoveredProject.summary}</p>
 
-                    {/* Grid of preview images */}
-                    <div className="grid grid-cols-3 gap-2">
-                        {hoveredProject.gallery?.slice(0, 3).map((img, idx) => (
-                            <motion.img
-                                key={idx}
-                                src={img}
-                                alt={`${hoveredProject.title} preview ${idx + 1}`}
-                                className="rounded-lg object-cover w-full h-[80px]"
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: idx * 0.1 }}
-                            />
-                        ))}
-                    </div>
-                </motion.div>
+                //     {/* Grid of preview images */}
+                //     <div className="grid grid-cols-3 gap-2">
+                //         {hoveredProject.gallery?.slice(0, 3).map((img, idx) => (
+                //             <motion.img
+                //                 key={idx}
+                //                 src={img}
+                //                 alt={`${hoveredProject.title} preview ${idx + 1}`}
+                //                 className="rounded-lg object-cover w-full h-[80px]"
+                //                 initial={{ opacity: 0, y: 10 }}
+                //                 animate={{ opacity: 1, y: 0 }}
+                //                 transition={{ delay: idx * 0.1 }}
+                //             />
+                //         ))}
+                //     </div>
+                // </motion.div>
             )}
             <div className="sticky top-0 h-[100dvh] overflow-hidden">
                 <div
