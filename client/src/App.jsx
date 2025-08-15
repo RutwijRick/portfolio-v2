@@ -1,8 +1,7 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState, Suspense } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
 import { OrbitControls, Sphere, MeshDistortMaterial, Float } from "@react-three/drei";
-import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import './index.css'
@@ -17,6 +16,7 @@ import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
 import BlobsBG from "./components/BlobsBG";
 import FloatingParticles from "./components/FloatingParticles";
+import Preloader from "./components/Preloader";
 // Optional smooth scrolling (Apple-like feel)
 // import Lenis from "lenis";
 
@@ -45,43 +45,6 @@ function useDarkMode() {
 //     return () => lenis.destroy();
 //   }, []);
 // }
-
-// ---- Preloader -------------------------------------------------------------------------------
-function Preloader({ done }) {
-  return (
-    <AnimatePresence>
-      {!done && (
-        <motion.div
-          key="loader"
-          initial={{ opacity: 1 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[9999] grid place-items-center bg-white dark:bg-neutral-950"
-        >
-          <div className="flex flex-col items-center gap-6">
-            <motion.div
-              initial={{ scale: 0.9 }}
-              animate={{ scale: [0.9, 1.05, 1] }}
-              transition={{ duration: 1.2, repeat: Infinity, repeatType: "reverse" }}
-              className="text-3xl md:text-5xl font-bold tracking-tight"
-            >
-              RUTWIJ
-            </motion.div>
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: ["0%", "70%", "100%"] }}
-              transition={{ duration: 2.2, ease: "easeInOut", repeat: Infinity }}
-              className="h-1 rounded-full bg-neutral-900 dark:bg-neutral-100 w-40 overflow-hidden"
-            />
-            <div className="text-xs uppercase tracking-widest text-neutral-500 dark:text-neutral-400">
-              Loading your experience…
-            </div>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-}
 
 // ---- Main App -------------------------------------------------------------------------------
 export default function App() {
@@ -120,7 +83,7 @@ export default function App() {
       const distortion = 0.45;
 
       const baseHue = 198; // blue hue for #7dd3fc
-    const baseSat = 94;  // saturation for #7dd3fc
+      const baseSat = 94;  // saturation for #7dd3fc
 
       if (gooeyOrbRef.current) {
         if (scrollY >= 150) {
@@ -133,13 +96,15 @@ export default function App() {
           gsap.to(gooeyOrbRef.current.geometry.parameters, { radius: 1, duration: 0.5 });
         }
         materialRef.current.distort = distortion;
-        // Animate gradient color based on scroll
-        const hueShift = (scrollY / 5) % 360;
-        const color1 = new THREE.Color(`hsl(${hueShift}, 90%, 60%)`);
-        const color2 = new THREE.Color(`hsl(${(hueShift + 60) % 360}, 90%, 60%)`);
 
-        // Mix the two colors into one for the material
+        // Lightness oscillates between 40% (dark) and 75% (light) as you scroll
+        const lightness = 40 + Math.sin(scrollY / 300) * 15 + 20;
+
+        const color1 = new THREE.Color(`hsl(${baseHue}, ${baseSat}%, ${lightness}%)`);
+        const color2 = new THREE.Color(`hsl(${baseHue}, ${baseSat - 10}%, ${lightness - 5}%)`);
+        // Mix colors slightly for a subtle gradient shift
         const mixedColor = color1.clone().lerp(color2, 0.5);
+
         gsap.to(materialRef.current.color, {
           r: mixedColor.r,
           g: mixedColor.g,
@@ -148,7 +113,7 @@ export default function App() {
         });
       }
       document.body.style.background = theme === 'dark'
-        ? `linear-gradient(180deg, #000 ${scrollY / 85}%, rgb(195, 20, 50))`
+        ? `linear-gradient(180deg, #000 ${scrollY / 85}%, #4a004a`
         : `linear-gradient(180deg, #fff ${scrollY / 85}%, #ccc)`;
     };
 
@@ -313,7 +278,7 @@ export default function App() {
           className="fixed inset-0 pointer-events-none"
         >
           {/* <Suspense fallback={null}> */}
-            <FloatingParticles />
+          <FloatingParticles />
           {/* </Suspense> */}
           <ambientLight intensity={0.7} />
           <directionalLight position={[3, 3, 5]} intensity={1.4} />
