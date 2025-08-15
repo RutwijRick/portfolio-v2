@@ -16,31 +16,11 @@ import WorkSection from "./components/WorkSection";
 import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
 import BlobsBG from "./components/BlobsBG";
+import FloatingParticles from "./components/FloatingParticles";
 // Optional smooth scrolling (Apple-like feel)
 // import Lenis from "lenis";
 
 gsap.registerPlugin(ScrollTrigger);
-
-// Simple Particles Component
-function FloatingParticles() {
-  const points = useRef();
-  const [positions] = useState(() => {
-    const arr = new Float32Array(5000);
-    for (let i = 0; i < arr.length; i++) arr[i] = (Math.random() - 0.5) * 20;
-    return arr;
-  });
-
-  useFrame(({ clock }) => points.current.rotation.y = clock.elapsedTime * 0.02);
-
-  return (
-    <points ref={points}>
-      <bufferGeometry>
-        <bufferAttribute attach="attributes-position" count={positions.length / 3} array={positions} itemSize={3} />
-      </bufferGeometry>
-      <pointsMaterial size={0.05} color="#ffffff" transparent opacity={0.6} />
-    </points>
-  );
-}
 
 // ---- Utilities -------------------------------------------------------------------------------
 function useDarkMode() {
@@ -138,6 +118,9 @@ export default function App() {
       const position = [Math.sin(scrollY / 200) * 2, Math.cos(scrollY / 200) * 2, 0];
       const shapeMorph = Math.sin(scrollY / 100) * 0.5;
       const distortion = 0.45;
+
+      const baseHue = 198; // blue hue for #7dd3fc
+    const baseSat = 94;  // saturation for #7dd3fc
 
       if (gooeyOrbRef.current) {
         if (scrollY >= 150) {
@@ -329,9 +312,9 @@ export default function App() {
           camera={{ position: [0, 0, 4], fov: 45 }}
           className="fixed inset-0 pointer-events-none"
         >
-          <Suspense fallback={null}>
+          {/* <Suspense fallback={null}> */}
             <FloatingParticles />
-          </Suspense>
+          {/* </Suspense> */}
           <ambientLight intensity={0.7} />
           <directionalLight position={[3, 3, 5]} intensity={1.4} />
           <directionalLight position={[-3, -3, -5]} intensity={0.6} />
