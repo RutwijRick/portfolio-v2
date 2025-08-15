@@ -146,56 +146,58 @@ export default function App() {
 
 
       // === ABOUT SECTION ===
-      if (aboutRef.current) {
-        const totalStages = techStacks.length + 1; // 1 for About Me intro
-        const totalScroll = totalStages * window.innerHeight;
+      // if (aboutRef.current) {
+      //   const totalStages = techStacks.length + 1; // intro + stacks
+      //   const stageHeight = window.innerHeight * 0.9; // slightly shorter per stage for snappier feel
+      //   const totalScroll = totalStages * stageHeight + window.innerHeight * 0.5; // buffer
 
-        const aboutTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: aboutRef.current,
-            start: "top top",
-            end: `+=${totalScroll}`,
-            pin: true,
-            scrub: true,
-          }
-        });
+      //   const aboutTl = gsap.timeline({
+      //     scrollTrigger: {
+      //       trigger: aboutRef.current,
+      //       start: "top top",
+      //       end: `+=${totalScroll}`,
+      //       pin: true,
+      //       scrub: true,
+      //       anticipatePin: 1,
+      //     }
+      //   });
 
-        // Step 1: About Me intro
-        aboutTl.fromTo(
-          aboutRef.current.querySelector("[data-about-intro]"),
-          { opacity: 0, y: 40 },
-          { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }
-        );
+      //   // Step 1: About Me intro
+      //   aboutTl.fromTo(
+      //     aboutRef.current.querySelector("[data-about-intro]"),
+      //     { opacity: 0, y: 40 },
+      //     { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }
+      //   );
 
-        // Step 2..N: Each tech stack reveal
-        techStacks.forEach((stack, i) => {
-          aboutTl.fromTo(
-            aboutRef.current.querySelector(`[data-stack='${i}']`),
-            { opacity: 0, y: 60 },
-            { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
-            "+=0.5" // delay between stacks
-          );
-        });
-      }
+      //   // Step 2..N: Each tech stack reveal
+      //   techStacks.forEach((stack, i) => {
+      //     aboutTl.fromTo(
+      //       aboutRef.current.querySelector(`[data-stack='${i}']`),
+      //       { opacity: 0, y: 60 },
+      //       { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
+      //       "+=0.5" // delay between stacks
+      //     );
+      //   });
+      // }
 
       // Horizontal scroll section (projects strip)
-      if (horizontalRef.current) {
-        const track = horizontalRef.current.querySelector("[data-track]");
-        const cards = horizontalRef.current.querySelectorAll("[data-card]");
-        const totalWidth = cards.length * 360; // card width estimate
-        gsap.to(track, {
-          x: () => -(totalWidth - window.innerWidth + 128),
-          ease: "none",
-          scrollTrigger: {
-            trigger: horizontalRef.current,
-            start: "top top",
-            end: () => `+=${Math.max(1000, totalWidth)}`,
-            pin: true,
-            scrub: true,
-            invalidateOnRefresh: true,
-          },
-        });
-      }
+      // if (horizontalRef.current) {
+      //   const track = horizontalRef.current.querySelector("[data-track]");
+      //   const cards = horizontalRef.current.querySelectorAll("[data-card]");
+      //   const totalWidth = cards.length * 360; // card width estimate
+      //   gsap.to(track, {
+      //     x: () => -(totalWidth - window.innerWidth + 128),
+      //     ease: "none",
+      //     scrollTrigger: {
+      //       trigger: horizontalRef.current,
+      //       start: "top top",
+      //       end: () => `+=${Math.max(1000, totalWidth)}`,
+      //       pin: true,
+      //       scrub: true,
+      //       invalidateOnRefresh: true,
+      //     },
+      //   });
+      // }
     });
     return () => ctx.revert();
   }, []);

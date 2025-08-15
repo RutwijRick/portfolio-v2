@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import techStacks from "../data/techStacks";
 import FloatingIcon from "./FloatingIcon";
+import { slideRight } from "../anims/animations";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -40,7 +41,7 @@ export default function AboutSection() {
             tl.fromTo(
                 "[data-about-text]",
                 { opacity: 0, y: 40 },
-                { opacity: 1, y: 0, duration: 1 }
+                { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }
             );
         });
 
@@ -55,7 +56,10 @@ export default function AboutSection() {
             {/* Left side — About Me & Tech Stacks */}
             <div>
                 <motion.div
-                    data-about-intro
+                    variants={slideRight}
+                    initial="hidden"
+                    animate="visible"
+                    className="space-y-5"
                 >
                     <h2 className="text-4xl font-bold mb-6">About Me</h2>
                     <p className="text-neutral-400 leading-relaxed mb-8">
@@ -68,6 +72,7 @@ export default function AboutSection() {
                 {/* Tech Stack Card */}
                 <motion.div
                     key={activeStack}
+                    data-stack={activeStack}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
@@ -108,12 +113,12 @@ export default function AboutSection() {
                             ]}
                         />
                     ))}
-                    <OrbitControls
+                    {/* <OrbitControls
                         enableZoom={false}
                         enablePan={false}
                         autoRotate
                         autoRotateSpeed={0.6}
-                    />
+                    /> */}
                 </Canvas>
             </div>
         </div>

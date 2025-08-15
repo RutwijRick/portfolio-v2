@@ -18,7 +18,7 @@ const FloatingIcon = ({ textureUrl, position }) => {
     // });
 
     return (
-        <Float speed={2} rotationIntensity={1.5} floatIntensity={2}>
+        <Float>
             <mesh ref={meshRef} position={position}>
                 {/* Use plane instead of sphere for better icon visibility */}
                 <planeGeometry args={[1.2, 1.2]} />
