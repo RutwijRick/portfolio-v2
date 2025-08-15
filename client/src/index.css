@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+.project-list {
+  transition: 0.5s all ease-in-out;
+  scale: 1;
+}
+
+.project-list:hover {
+  transition: 0.5s all ease-in-out;
+  scale: 1.5;
+}
