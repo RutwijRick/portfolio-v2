@@ -167,7 +167,6 @@ export default function App() {
       document.body.style.background = theme === 'dark'
         ? `linear-gradient(180deg, #000 ${scrollY / 85}%, rgb(195, 20, 50))`
         : `linear-gradient(180deg, #fff ${scrollY / 85}%, #ccc)`;
-      // linear-gradient(to right, rgb(195, 20, 50), rgb(36, 11, 54))
     };
 
     window.addEventListener('scroll', scrollHandler);
@@ -230,6 +229,90 @@ export default function App() {
   const scrollTo = (ref) => {
     ref?.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+
+  useEffect(() => {
+    let isTeleporting = false;
+    let tensionActive = false;
+
+    const doc = document.documentElement; // more reliable than body
+    const maxY = () => doc.scrollHeight - window.innerHeight;
+    const atTop = () => window.scrollY <= 0;
+    const atBottom = () => Math.ceil(window.scrollY + window.innerHeight) >= doc.scrollHeight;
+
+    const jumpTo = (y) => {
+      isTeleporting = true;
+      // jump just inside the page to avoid immediate re-trigger
+      window.scrollTo({ top: y, behavior: "auto" });
+      // release the guard after the browser applies the jump
+      requestAnimationFrame(() => { isTeleporting = false; });
+    };
+
+    // Adds tension before teleport
+    const applyTension = (direction) => {
+      if (tensionActive) return;
+      tensionActive = true;
+
+      const tensionDistance = direction === "up" ? -80 : 80; // px overshoot
+      const target = window.scrollY + tensionDistance;
+
+      gsap.to(window, {
+        scrollTo: { top: target },
+        duration: 0.25,
+        ease: "power2.out",
+        onComplete: () => {
+          if (direction === "up") jumpTo(maxY() - 1); // top → end
+          else jumpTo(1); // bottom → start
+          tensionActive = false;
+        },
+      });
+    };
+
+    // Safety net: keeps loop working if user drags scrollbar or momentum ends exactly at boundary
+    const onScroll = (e) => {
+      if (isTeleporting) return;
+      if (e.deltaY < 0 && atTop()) {
+        applyTension("up");
+      } else if (e.deltaY > 0 && atBottom()) {
+        applyTension("down");
+      }
+    };
+
+    // Direction-aware wheel handler (desktop)
+    const onWheel = (e) => {
+      if (isTeleporting || tensionActive) return;
+      if (e.deltaY < 0 && atTop()) {
+        applyTension("up");
+      } else if (e.deltaY > 0 && atBottom()) {
+        applyTension("down");
+      }
+    };
+
+    // Direction-aware touch handler (mobile)
+    let lastY = 0;
+    const onTouchStart = (e) => { lastY = e.touches[0].clientY; };
+    const onTouchMove = (e) => {
+      if (isTeleporting || tensionActive) return;
+      const currentY = e.touches[0].clientY;
+      const dy = lastY - currentY; // >0 means scrolling down, <0 up
+      if (dy < 0 && atTop()) jumpTo(maxY() - 1);         // swipe down at top → end
+      else if (dy > 0 && atBottom()) jumpTo(1);          // swipe up at bottom → start
+      lastY = currentY;
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("wheel", onWheel, { passive: true });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+    };
+  }, []);
+
+
   return (
     <div className="relative min-h-screen w-full text-neutral-900 dark:text-neutral-50 overflow-x-hidden snap-y snap-mandatory" style={{ zIndex: '2' }}>
       <Preloader done={loaded} />
@@ -283,7 +366,7 @@ export default function App() {
       </div>
       {/* HERO ------------------------------------------------------------------ */}
       <Section id="hero" ref={heroRef} className="relative grid place-items-center">
-        <HeroSection scrollTo={scrollTo} workRef={workRef} contactRef={contactRef} />
+        <HeroSection scrollTo={scrollTo} workRef={workRef} contactRef={contactRef} loaded={loaded} />
       </Section>
 
       {/* ABOUT ----------------------------------------------------------------- */}
