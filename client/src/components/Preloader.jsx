@@ -18,7 +18,7 @@ const Preloader = ({ done }) => {
                             transition={{ duration: 1.2, repeat: Infinity, repeatType: "reverse" }}
                             className="text-3xl md:text-5xl font-bold tracking-tight"
                         >
-                            RUTWIJ
+                            <img src="./signature.png" alt="Rutwij Vaykode" />
                         </motion.div>
                         <motion.div
                             initial={{ width: 0 }}
@@ -27,7 +27,7 @@ const Preloader = ({ done }) => {
                             className="h-1 rounded-full bg-neutral-900 dark:bg-neutral-100 w-40 overflow-hidden"
                         />
                         <div className="text-xs uppercase tracking-widest text-neutral-500 dark:text-neutral-400">
-                            Loading your experience…
+                            Full-Stack Developer
                         </div>
                     </div>
                 </motion.div>

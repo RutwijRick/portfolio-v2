@@ -124,7 +124,7 @@ export default function App() {
 
   // Fake asset loading: swap with actual image preloaders
   useEffect(() => {
-    const timer = setTimeout(() => setLoaded(true), 1400);
+    const timer = setTimeout(() => setLoaded(true), 2000);
     return () => clearTimeout(timer);
   }, []);
 
